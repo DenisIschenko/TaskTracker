@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Create an account</title>
+    <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" />
+    <link th:href="@{/css/style.css}"  rel="stylesheet" />
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="container">
+    <div th:classappend="${successMessage}?'':'d-none'">
+        <div class="alert alert-success" role="alert">
+            <span th:utext="${successMessage}"></span>
+        </div>
+        <h4 class="text-center mt-4"><a th:href="@{/login}">Login</a></h4>
+    </div>
+    <form method="POST" th:action="@{/registration}" class="form-signin" th:object="${user}" th:classappend="${successMessage}?'d-none':''">
+        <h2 class="form-heading">Create your account</h2>
+
+        <div class="form-group" th:classappend="${#fields.hasErrors('login')}?'has-danger':''">
+            <input name="login" type="text" class="form-control" placeholder="Login" autofocus="true" th:field="*{login}" th:classappend="${#fields.hasErrors('login')}?'is-invalid':''"/>
+
+            <div class="invalid-feedback" th:each="err : ${#fields.errors('login')}" th:text="${err}"></div>
+
+            <!--<span class="invalid-feedback" th:utext="${error}"></span>-->
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('password')}?'has-danger':''">
+            <input name="password" type="password" class="form-control" placeholder="Password" th:field="*{password}" th:classappend="${#fields.hasErrors('password')}?'is-invalid':''"/>
+            <!--<span class="invalid-feedback" th:utext="${error}"></span>-->
+
+            <div class="invalid-feedback" th:each="err : ${#fields.errors('password')}" th:text="${err}"></div>
+
+        </div>
+        <div class="form-group">
+            <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Submit</button>
+        </div>
+        <!--{errors}-->
+        <!--First Name:-->
+        <!--<input type="text" th:field="*{login}" />-->
+        <!--<br/>-->
+        <!--Last Name:-->
+        <!--<input type="text" th:field="*{password}" />-->
+        <!--<br/>-->
+        <!--<button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Submit</button>-->
+    </form>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+</body>
+</html>
