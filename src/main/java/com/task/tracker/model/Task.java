@@ -1,5 +1,6 @@
 package com.task.tracker.model;
 
+import com.task.tracker.entity_helper.TaskStatusConverter;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -14,14 +15,14 @@ public class Task {
     private int id;
 
     @Column
-    @NotEmpty(message = "*Please provide Task title")
     private String title;
 
     @Column
     private String description;
 
     @Column
-    private String status;
+    @Convert(converter = TaskStatusConverter.class)
+    private Status status = Status.NEW;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
@@ -57,11 +58,11 @@ public class Task {
         this.description = description;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -87,5 +88,60 @@ public class Task {
 
     public void setAssignee(User assignee) {
         this.assignee = assignee;
+    }
+
+    public enum Status {
+        NEW(0, "new"),
+        ACCEPTED(1, "accepted"),
+        CLOSED(2, "closed");
+
+        private int code;
+        private String text;
+
+        Status(int code, String text) {
+            this.code = code;
+            this.text = text;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public void setCode(int code) {
+            this.code = code;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return text;
+        }
+
+        public static Status findByCode(int code) {
+            for (Status status : Status.values()) {
+                if (status.code == code) {
+                    return status;
+                }
+            }
+
+            return null;
+        }
+
+        public static Status findByText(String text) {
+            for (Status status : Status.values()) {
+                if (status.text.equals(text)) {
+                    return status;
+                }
+            }
+
+            return null;
+        }
     }
 }
