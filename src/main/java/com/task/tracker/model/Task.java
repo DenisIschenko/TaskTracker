@@ -17,7 +17,7 @@ public class Task {
     @Column
     private String title;
 
-    @Column
+    @Column(length=1024)
     private String description;
 
     @Column

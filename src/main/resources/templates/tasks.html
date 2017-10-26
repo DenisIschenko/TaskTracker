@@ -3,6 +3,11 @@
 <head th:replace="fragments/header :: header('Tasks list')" />
 
 <body>
+<style>
+    .form-check {
+        margin-bottom: .2rem;
+    }
+</style>
 <nav th:replace="fragments/nav :: nav(${user})"></nav>
 <nav th:replace="fragments/nav :: alerts"></nav>
 
@@ -14,6 +19,40 @@
     </div>
 
     <div class="row mt-3">
+        <form class="filtering col-12" method="get" th:action="@{/tasks}">
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <div class="input-daterange input-group input-group-sm" id="datepicker">
+                        <input type="text" class="form-control" name="start" th:value="(${#httpServletRequest.getParameter('start')}==null)?${#dates.format(#dates.createNow(),'MM/dd/YYYY')}:${#httpServletRequest.getParameter('start')}"/>
+                        <span class="input-group-addon">to</span>
+                        <input type="text" class="form-control" name="end" th:value="(${#httpServletRequest.getParameter('end')}==null)?${#dates.format(#dates.createNow(),'MM/dd/YYYY')}:${#httpServletRequest.getParameter('end')}"/>
+                    </div>
+                </div>
+                <small class="col-auto">
+                    <div class="form-check form-check-sm form-check-inline">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="statuses" value="new" th:checked="(${param.statuses}!=null)?(${#lists.contains(param.statuses, &quot;new&quot;)}?true:false):false" /> New
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="statuses" value="accepted" th:checked="(${param.statuses}!=null)?(${#lists.contains(param.statuses, &quot;accepted&quot;)}?true:false):false" /> Accepted
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="statuses" value="closed" th:checked="(${param.statuses}!=null)?(${#lists.contains(param.statuses, &quot;closed&quot;)}?true:false):false" /> Closed
+                        </label>
+                    </div>
+                </small>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-outline-secondary btn-sm">Filter</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="row mt-3">
         <div class="col-12">
             <table class="table table-bordered table-responsive">
                 <tr>
@@ -22,6 +61,7 @@
                     <th>description</th>
                     <th>status</th>
                     <th>date</th>
+                    <th>action</th>
                 </tr>
                 <tr th:each="prod : ${tasks}">
                     <td><a th:text="${prod.id}" th:href="@{/tasks/{id}(id=${prod.id})}"></a></td>
@@ -29,6 +69,7 @@
                     <td th:text="${prod.description}"></td>
                     <td th:text="${prod.status.text}"></td>
                     <td th:text="${prod.creationDate}"></td>
+                    <td><a th:text="Edit" th:href="@{/tasks/{id}/edit(id=${prod.id})}"></a></td>
                 </tr>
             </table>
         </div>
@@ -37,5 +78,10 @@
 </div>
 
 <div th:replace="fragments/footer :: foot"></div>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+<script>
+    $('.input-daterange').datepicker({});
+</script>
 </body>
 </html>

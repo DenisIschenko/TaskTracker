@@ -7,6 +7,11 @@
 <nav th:replace="fragments/nav :: alerts"></nav>
 
 <div class="container">
+    <div class="row mt-3">
+        <div class="col-12">
+            <a class="btn btn-primary float-right" th:href="@{/tasks/{id}/edit(id=${task.id})}">Edit Task</a>
+        </div>
+    </div>
     <table class="table table-hover mt-4">
         <tbody>
         <tr>
@@ -31,7 +36,7 @@
         </tr>
         <tr>
             <th scope="row">Assignee</th>
-            <td th:utext="${task.assignee}"></td>
+            <td th:utext="${task.assignee.login}"></td>
         </tr>
         </tbody>
     </table>

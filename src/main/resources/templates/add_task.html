@@ -30,6 +30,13 @@
             </select>
             <div class="invalid-feedback" th:each="err : ${#fields.errors('statusText')}" th:text="${err}"></div>
         </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('assigneeLogin')}?'has-danger':''">
+            <select class="form-control" name="statusText" th:field="*{assigneeLogin}" th:classappend="${#fields.hasErrors('assigneeLogin')}?'is-invalid':''">
+                <option th:each="usr : ${users}" th:text="${usr.login}" th:value="${usr.login}"></option>
+
+            </select>
+            <div class="invalid-feedback" th:each="err : ${#fields.errors('assigneeLogin')}" th:text="${err}"></div>
+        </div>
         <div class="form-group">
             <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Create</button>
         </div>

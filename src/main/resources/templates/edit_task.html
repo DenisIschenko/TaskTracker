@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="fragments/header :: header('Edit task')" />
+
+<body>
+<nav th:replace="fragments/nav :: nav(${user})"></nav>
+<nav th:replace="fragments/nav :: alerts"></nav>
+<div class="container">
+    <div th:classappend="${successMessage}?'':'d-none'">
+        <div class="alert alert-success" role="alert">
+            <span th:utext="${successMessage}"></span>
+        </div>
+    </div>
+    <form method="POST" th:action="@{/tasks/{id}/edit(id=${task.id})}" class="form-signin" th:object="${taskForm}">
+        <h2 class="form-heading">Edit task</h2>
+
+        <div class="form-group" th:classappend="${#fields.hasErrors('title')}?'has-danger':''">
+            <input name="title" type="text" class="form-control" placeholder="Title" autofocus="true" th:field="*{title}" th:classappend="${#fields.hasErrors('title')}?'is-invalid':''" th:value="${task.title}"/>
+            <div class="invalid-feedback" th:each="err : ${#fields.errors('title')}" th:text="${err}"></div>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('description')}?'has-danger':''">
+            <textarea class="form-control" name="description" placeholder="Description" th:field="*{description}" th:classappend="${#fields.hasErrors('description')}?'is-invalid':''" th:text="${task.description}"></textarea>
+            <div class="invalid-feedback" th:each="err : ${#fields.errors('description')}" th:text="${err}"></div>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('statusText')}?'has-danger':''">
+            <select class="form-control" name="statusText" th:field="*{statusText}" th:classappend="${#fields.hasErrors('statusText')}?'is-invalid':''" th:alt="${task.status.text}">
+                <option th:value="new" th:selected="(${task.status.text} == 'new') ? selected : ''">New</option>
+                <option th:value="accepted" th:selected="(${task.status.text} == 'accepted') ? selected : ''">Accepted</option>
+                <option th:value="closed" th:selected="(${task.status.text} == 'closed') ? selected : ''">Closed</option>
+            </select>
+            <div class="invalid-feedback" th:each="err : ${#fields.errors('statusText')}" th:text="${err}"></div>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('assigneeLogin')}?'has-danger':''">
+            <select class="form-control" name="statusText" th:field="*{assigneeLogin}" th:classappend="${#fields.hasErrors('assigneeLogin')}?'is-invalid':''" th:alt="${task.assignee.login}">
+                <option th:each="usr : ${users}" th:text="${usr.login}" th:value="${usr.login}" th:selected="(${task.assignee.login} == ${usr.login}) ? selected : ''"></option>
+
+            </select>
+            <div class="invalid-feedback" th:each="err : ${#fields.errors('assigneeLogin')}" th:text="${err}"></div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Save</button>
+        </div>
+    </form>
+
+</div>
+
+<div th:replace="fragments/footer :: foot"></div>
+</body>
+</html>
