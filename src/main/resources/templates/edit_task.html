@@ -6,11 +6,6 @@
 <nav th:replace="fragments/nav :: nav(${user})"></nav>
 <nav th:replace="fragments/nav :: alerts"></nav>
 <div class="container">
-    <div th:classappend="${successMessage}?'':'d-none'">
-        <div class="alert alert-success" role="alert">
-            <span th:utext="${successMessage}"></span>
-        </div>
-    </div>
     <form method="POST" th:action="@{/tasks/{id}/edit(id=${task.id})}" class="form-signin" th:object="${taskForm}">
         <h2 class="form-heading">Edit task</h2>
 

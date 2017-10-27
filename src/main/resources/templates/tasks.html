@@ -23,9 +23,9 @@
             <div class="form-row align-items-center">
                 <div class="col-auto">
                     <div class="input-daterange input-group input-group-sm" id="datepicker">
-                        <input type="text" class="form-control" name="start" th:value="(${#httpServletRequest.getParameter('start')}==null)?${#dates.format(#dates.createNow(),'MM/dd/YYYY')}:${#httpServletRequest.getParameter('start')}"/>
+                        <input type="text" class="form-control" name="start" th:value="(${#httpServletRequest.getParameter('start')}==null)?${#dates.format(today,'MM/dd/YYYY')}:${#httpServletRequest.getParameter('start')}"/>
                         <span class="input-group-addon">to</span>
-                        <input type="text" class="form-control" name="end" th:value="(${#httpServletRequest.getParameter('end')}==null)?${#dates.format(#dates.createNow(),'MM/dd/YYYY')}:${#httpServletRequest.getParameter('end')}"/>
+                        <input type="text" class="form-control" name="end" th:value="(${#httpServletRequest.getParameter('end')}==null)?${#dates.format(tomorrow,'MM/dd/YYYY')}:${#httpServletRequest.getParameter('end')}"/>
                     </div>
                 </div>
                 <small class="col-auto">
@@ -57,11 +57,11 @@
             <table class="table table-bordered table-responsive">
                 <tr>
                     <th>#</th>
-                    <th>title</th>
-                    <th>description</th>
-                    <th>status</th>
-                    <th>date</th>
-                    <th>action</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
                 </tr>
                 <tr th:each="prod : ${tasks}">
                     <td><a th:text="${prod.id}" th:href="@{/tasks/{id}(id=${prod.id})}"></a></td>

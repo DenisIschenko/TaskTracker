@@ -49,4 +49,18 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.save(task);
     }
 
+    @Override
+    public List<Task> findByStatuses(List<Task.Status> statuses) {
+        return taskRepository.findAllByStatusIsIn(statuses);
+    }
+
+    @Override
+    public List<Task> findAllByCreationDateBetween(Date start, Date end) {
+        return taskRepository.findAllByCreationDateBetween(start, end);
+    }
+
+    @Override
+    public List<Task> AllByCreationDateAndStatuses(List<Task.Status> statuses, Date start, Date end) {
+        return taskRepository.findAllByStatusIsInAndCreationDateBetween(statuses, start, end);
+    }
 }

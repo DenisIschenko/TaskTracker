@@ -20,8 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class WebController {
@@ -64,7 +65,7 @@ public class WebController {
     }
 
     private void auto_login(String login, String password) {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(login, password, grantedAuthorities);
 
         if (usernamePasswordAuthenticationToken.isAuthenticated()) {
@@ -82,17 +83,43 @@ public class WebController {
     @RequestMapping(value = {"/", "/tasks"}, method = RequestMethod.GET)
     public ModelAndView tasks(@RequestParam(value="start", required=false) String start,
                               @RequestParam(value = "end", required = false) String end,
-                              @RequestParam(value = "statuses", required = false) List<String> statuses) {
+                              @RequestParam(value = "statuses", required = false) List<String> statuses) throws ParseException {
 
-        System.out.println(start);
-        System.out.println(end);
-        System.out.println(statuses);
+        List tasks;
+
+        if (start != null && end != null && statuses != null){
+            List<Task.Status> statusList = new ArrayList<>();
+            statuses.forEach((temp) -> statusList.add(Task.Status.findByText(temp)));
+
+            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+            Date start_date = formatter.parse(start);
+            Date end_date = formatter.parse(end);
+
+            tasks = taskService.AllByCreationDateAndStatuses(statusList, start_date, end_date);
+
+        } else if (start != null && end != null){
+            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+            Date start_date = formatter.parse(start);
+            Date end_date = formatter.parse(end);
+
+            tasks = taskService.findAllByCreationDateBetween(start_date, end_date);
+        } else if (statuses != null){
+            List<Task.Status> statusList = new ArrayList<>();
+            statuses.forEach((temp) -> statusList.add(Task.Status.findByText(temp)));
+
+            tasks = taskService.findByStatuses(statusList);
+        } else {
+            tasks = taskService.findAll();
+        }
         ModelAndView modelAndView = new ModelAndView();
         User user = getAuthUser();
-        List tasks = taskService.findAll();
+        Date today = new Date();
+        Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24));
 
         modelAndView.addObject("user", user.getLogin());
         modelAndView.addObject("tasks", tasks);
+        modelAndView.addObject("today", today);
+        modelAndView.addObject("tomorrow", tomorrow);
         modelAndView.setViewName("tasks");
         return modelAndView;
     }
